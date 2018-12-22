@@ -826,3 +826,8 @@ ubuntu@clarence:~/test$ sudo apt-get isntall git
 删除包
 remove 删除包
 purge 删除包同时删除配置文件
+
+
+11-1 Linux-shell脚本编程
+
+
