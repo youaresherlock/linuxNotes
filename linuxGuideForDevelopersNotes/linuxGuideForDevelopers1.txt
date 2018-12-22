@@ -1,0 +1,828 @@
+3-1 Linux-在文件系统中跳转
+pwd 显示当前工作目录 print working directory
+绝对路径 从/根路径开始
+相对路径 相对工作目录
+. 表示当前工作目录
+.. 表示当前工作目录的父目录
+cd Change(working) Dir 改变当前工作路径
+cd - 返回到上一次目录
+cd 不加参数  回到主目录/home/username
+
+ls -a 显示包括隐藏的文件
+
+输入命令的时候输错了想要跳转到输入的字符串前后，可以用
+ctrl+a 跳转到开头
+ctrl+e 跳转到结尾
+
+Linux
+grep命令用于查找文件里符合条件的字符串
+uniq 可检查文本文件中重复出现的行列。
+whoami命令用于显示自身用户名称相当于id -un
+
+4-1 Linux-操作文件和目录
+文件操作命令有四种 copy、move、rename、remove
+copy拷贝:
+$ cp file1 file2
+$ cp -r dir1 dir2 dir2如果不存在时拷贝dir1为dir2，内容相同，否则就是在dir2中拷贝dir1
+
+move移动文件:
+$ mv file .. 将file移动到上一级目录之中
+$ mv file dir/ 将file移动到当前目录的dir目录之中
+
+rename重命名:
+$ mv file1 file2
+$ mv dir1 dir2 # dir2存在，则为移动操作
+
+remove删除:
+$ rm file 删除文件可以直接使用rm命令
+$ rm -r dir 删除目录必须配合选项"-r"
+
+创建文件
+$ touch a.txt 
+$ >a.txt
+
+创建目录 
+$ mkdir dir
+
+查看文件
+$ cat file
+
+查看文件类型
+$ file a.txt
+
+
+Linux less命令:
+less 与 more 类似，但使用 less 可以随意浏览文件，而 more 仅能向前移动，却不能向后移动，而且 less 在查看之前不会加载整个文件。
+
+wget:使用wget从网上下载软件、音乐、视频
+$ wget http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.2.1.tar.gz
+下载文件并以指定的文件名保存文件
+$ wget -O taglist.zip http://www.vim.org/scripts/download_script.php?src_id=7701
+后台下载
+$ wget -b taglist.zip http://www.vim.org/scripts/download_script.php?src_id=7701 
+可以使用tail -f wget-log查看日志下载情况
+
+解压缩:
+zip or unzip 
+
+如果是.tar.gz文件
+-x: 解压
+-c: 建立压缩档案
+-z: 有gzip属性的
+-j: 有bz2属性的
+-Z: 有compress属性的
+-f: 使用档案名字，必须是最后一个参数，后面只能接档案名
+-v: 显示所有过程
+
+解压: tar zxvf wget-latest.tar.gz 
+压缩: tar zcvf wget-lat.tar.gz wget-1.20/
+
+如果是.tar.bz2文件
+解压: tar jxvf wget-latest.tar.bz2
+压缩: tar jcvf wget-late.tar.bz2 wget-1.20/
+
+
+5.1 Linux-重定向(输入/输出重定向)
+大多数Unix系统命令从你的终端接受输入并将所产生的输出发送回到你的终端。
+一个命令通常从一个叫标准输入的地方读取输入，默认情况下，这恰好是你的
+终端。
+http://www.runoob.com/linux/linux-shell-io-redirections.html
+
+eg:
+ubuntu@clarence:~$ ls
+Clarence  index.html  output.txt  Python2  ss-fly  test
+ubuntu@clarence:~$ date
+Mon Dec 17 13:17:26 CST 2018
+ubuntu@clarence:~$ date >output.txt
+ubuntu@clarence:~$ cat output.txt
+Mon Dec 17 13:17:33 CST 2018
+ubuntu@clarence:~$ ls shit >output.txt
+ls: cannot access 'shit': No such file or directory
+ubuntu@clarence:~$ ls >output.txt
+ubuntu@clarence:~$ cat output.txt
+Clarence
+index.html
+output.txt
+Python2
+ss-fly
+test
+ubuntu@clarence:~$ ls /bin|grep less
+bzless
+less
+lessecho
+lessfile
+lesskey
+lesspipe
+zless
+ubuntu@clarence:~$ ls /bin >bin.txt
+ubuntu@clarence:~$ grep less <bin.txt
+bzless
+less
+lessecho
+lessfile
+lesskey
+lesspipe
+zless
+
+三个重要的文件(EveryThing is file).
+file descriptor 文件描述符
+
+一般情况下，每个Unix/Linux命令运行时都会打开三个文件:
+一般stdin,stdout都是终端 
+标准输入文件(stdin): stdin的文件描述符为0，Unix程序默认从stdin读取数据
+标准输出文件(stdout): stdout的文件描述符为1，Unix程序默认向stdout输出数据
+标准错误文件(stderr): stderr的文件描述符为2,Unix程序会向stderr流中写入错误信息
+默认情况下， command > file将stdout重定向到file,command < file将stdin重定向到file
+
+command > file 将输出重定向到file
+command < flle 将输入重定向到file
+command >> file 将输出以追加的方式重定向到file
+
+eg:
+ubuntu@clarence:~$ ls
+Clarence  file1.txt  file2.txt  Python2  ss-fly  test
+ubuntu@clarence:~$ cat file1.txt file2.txt
+hello
+world
+ubuntu@clarence:~$ cat file1.txt >file.txt
+ubuntu@clarence:~$ cat file.txt
+hello
+ubuntu@clarence:~$ cat file2.txt >file.txt
+ubuntu@clarence:~$ cat file.txt
+world 
+ubuntu@clarence:~$ cat file1.txt >> file.txt
+ubuntu@clarence:~$ cat file.txt
+world
+hello
+同样的道理:
+ubuntu@clarence:~$ cat file1.txt file2.txt > test.txt
+ubuntu@clarence:~$ cat test.txt
+hello
+world
+
+ubuntu@clarence:~$ ls shit 2> out.txt
+ubuntu@clarence:~$ cat out.txt
+ls: cannot access 'shit': No such file or directory
+
+ubuntu@clarence:~$ cat out.txt
+hello, world
+ubuntu@clarence:~$ cowsay < out.txt
+ ______________
+< hello, world >
+ --------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+ubuntu@clarence:~$ cowsay hello >out.txt
+ubuntu@clarence:~$ cat out.txt
+ _______
+< hello >
+ -------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+
+pipeline
+command1|command2|command3 |是管道符
+
+ls | more
+管道经常用于将一个命令的输出作为另一个命令的输入
+ls可以生成一个目录列表。对于特别长的目录列表，输出可以有多个
+屏幕的长度。
+命令more管理输出，一次一屏地显示输出
+ls和more是两个独立的进程，设置一个管道，以便允许将ls的输出作为
+more的输入
+
+eg：
+ubuntu@clarence:~$ cat out.txt
+ _______
+< hello >
+ -------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+d.txt
+a.txt
+f.html
+b.txt
+b.txt
+ubuntu@clarence:~$ cat out.txt|uniq
+ _______
+< hello >
+ -------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+d.txt
+a.txt
+f.html
+b.txt
+ubuntu@clarence:~$ cat out.txt|uniq|grep txt 查找到out.txt文件中不重复，并且包含txt的行
+d.txt
+a.txt
+b.txt
+ubuntu@clarence:~$ cat out.txt|uniq|grep txt|sort 排序
+a.txt
+b.txt
+d.txt
+
+
+6-1 Linux-用户和文件权限
+home is writable, but not outside
+这里的home就是我的/home/ubuntu
+
+eg:
+ubuntu@clarence:~$ pwd
+/home/ubuntu
+ubuntu@clarence:~$ touch aa
+ubuntu@clarence:~$ cd /
+ubuntu@clarence:/$ touch aa 可以看到写被拒绝了
+touch: cannot touch 'aa': Permission denied
+ubuntu@clarence:/$ sudo touch a.txt
+ubuntu@clarence:/$ ls
+
+Linux系统是一种典型的多用户系统，不同的用户处于不同的地位，拥有不同的权限。
+为了保护系统的安全性，Linux系统对不同的用户访问同一文件(包括目录文件)的权限
+做出了不同的规定。
+可以使用ll或ls -l命令来显示一个文件的属性以及文件所属的用户和组
+
+文件的三个权限:
+reading->r
+writing->w
+executing-x
+将用户划分为:
+属主权限(该文件的所有者)owner
+属组权限(所有者的同组用户)group
+其他用户权限world
+
+因此，每个文件的属性由左边的第一部分的10个字符来确定
+文件类型 owner  group  world
+0       1 2 3  4 5 6  7 8 9 
+d  		r w x  r - x  r - x
+第一个字符0表示的为:
+d 目录、-文件、l链接文档、b可随机存取装置、c一次性读取装置，鼠标键盘等
+有读权限为r, 写权限为w,没有则为-
+
+eg:
+ubuntu@clarence:~$ ll out.txt
+-rw-rw-r-- 1 ubuntu ubuntu 182 Dec 17 19:21 out.txt
+ubuntu@clarence:~$ ls -l out.txt
+-rw-rw-r-- 1 ubuntu ubuntu 182 Dec 17 19:21 out.txt
+权限 link number(硬链接的数量) owner group 文件大小 最后修改时间 文件名
+
+eg:
+ubuntu@clarence:~$ ls -l test
+total 4364
+drwxrwxr-x  3 ubuntu ubuntu    4096 Feb 22  2018 happygrep-master
+-rw-rw-r--  1 ubuntu ubuntu   12512 Dec 17 11:09 happygrep-master.zip
+drwxr-xr-x 13 ubuntu ubuntu    4096 Nov 30 07:11 wget-1.20
+-rw-rw-r--  1 ubuntu ubuntu 4429471 Dec 17 11:26 wget-late.tar.gz
+ubuntu@clarence:~$ ls -ld test
+drwxrwxr-x 4 ubuntu ubuntu 4096 Dec 17 11:26 test
+ubuntu@clarence:~$ ls
+Clarence  out.txt  Python2  ss-fly  test
+ubuntu@clarence:~$ mv out.txt test.txt
+mv: cannot move 'out.txt' to 'test.txt': Permission denied
+ubuntu@clarence:~$ chmod +w .
+ubuntu@clarence:~$ mv out.txt test.txt
+
+ubuntu@clarence:~$ ./a.sh
+-bash: ./a.sh: Permission denied
+ubuntu@clarence:~$ bash a.sh
+hello
+ubuntu@clarence:~$ ll a.sh
+-rw-rw-r-- 1 ubuntu ubuntu 11 Dec 17 19:55 a.sh
+ubuntu@clarence:~$ chmod +x a.sh
+ubuntu@clarence:~$ ls -l a.sh
+-rwxrwxr-x 1 ubuntu ubuntu 11 Dec 17 19:55 a.sh
+ubuntu@clarence:~$ ./a.sh
+hello
+
+文件夹有执行权限，那么cd才能进入
+eg:
+ubuntu@clarence:~$ ls -ld test
+drwxrwxr-x 4 ubuntu ubuntu 4096 Dec 17 11:26 test
+ubuntu@clarence:~$ chmod 666 test
+ubuntu@clarence:~$ ls -ld test
+drw-rw-rw- 4 ubuntu ubuntu 4096 Dec 17 11:26 test
+ubuntu@clarence:~$ cd test
+-bash: cd: test: Permission denied
+
+shortcuts 也可以使用一些快捷命令 
+
+如何运行.sh文件的方法:
+1.直接./加上文件名.sh ./hello.sh hello.sh必须有x权限
+2.直接sh加上文件名.sh sh hello.sh hello.sh可以没有x权限
+
+
+7-1 Linux-进程
+获取进程号pid(process id)
+方法一:
+Linux ps 命令用于显示当前进程(process)的状态
+-aux 显示较详细的咨询
+eg:
+ps aux
+ubuntu@clarence:~$ ps aux|less
+USER 用户ID，进程的所有者  
+%CPU 以百分比表示CPU使用率
+%MEM 以百分比表示内存的使用率
+VSZ 虚拟内存的大小
+RSS 进程占用的物理内存的大小，以千字节为单位
+START 进程运行的起始时间。		
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.1  0.2  37900  5292 ?        Ss   Mar28 714:15 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    Mar28   0:29 [kthreadd]
+root         4  0.0  0.0      0     0 ?        S<   Mar28   0:00 [kworker/0:0H]
+root         6  0.0  0.0      0     0 ?        S    Mar28  23:44 [ksoftirqd/0]
+root         7  0.0  0.0      0     0 ?        S    Mar28 115:17 [rcu_sched]
+root         8  0.0  0.0      0     0 ?        S    Mar28   0:00 [rcu_bh]
+root         9  0.0  0.0      0     0 ?        S    Mar28   0:00 [migration/0]
+root        10  0.0  0.0      0     0 ?        S<   Mar28   0:00 [lru-add-drain]
+root        11  0.0  0.0      0     0 ?        S    Mar28   1:03 [watchdog/0]
+root        12  0.0  0.0      0     0 ?        S    Mar28   0:00 [cpuhp/0]
+root        13  0.0  0.0      0     0 ?        S    Mar28   0:00 [kdevtmpfs]
+root        14  0.0  0.0      0     0 ?        S<   Mar28   0:00 [netns]
+root        15  0.0  0.0      0     0 ?        S    Mar28   0:17 [khungtaskd]
+:/可以输入字符串来在上面结果中搜索
+
+
+也可以直接利用grep程序来查找指定进程
+ubuntu@clarence:~$ ps aux|grep docker
+
+
+方法二:
+用top命令动态查看进程
+top程序连续显示系统进程更新的信息(默认三分钟更新一次)
+
+杀死进程:
+eg: 展示kill发送的所有信号
+ubuntu@clarence:~$ kill -l
+ 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+ 6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+11) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+16) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+26) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+31) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX
+
+Linux kill命令用于删除执行的程序或工作
+杀死进程 kill pid 
+kill pid 默认发出的是SIGTERM15信号，由kill命令产生，这个信号可以被阻塞和终止，而SIGKILL不可以
+强制杀死进程 kill -KILL pid
+彻底杀死进程 kill -9 pid发送的是SIGKILL信号(无条件终止进程)
+
+后台进程:
+在运行的指令末尾添加"&"可以让命令在后台运行
+command1 && command2表示前者执行成功，执行后台命令
+
+bg和fg命令:
+如果发现前台运行的一个程序需要很长的时间，但是需要干其他的事情，就可以
+用Ctrl-z可以挂起这个程序 []中的是作业号
+然后我们可以把程序调度到后台执行:
+bg 作业号
+总结:
+& 用在一个命令的最后，可以把这个命令放到后台执行
+ctrl+z 可以将一个正在前台执行的命令放到后台，并且暂停
+jobs 查看当前有多少在后台运行的命令 []里面是序号，不是pid
+fg 将后台中的命令调至前台继续运行
+bg 将一个在后台暂停的命令，变成继续执行
+
+Linux是同时在运行着7个工作台，如果当前桌面被一个程序卡死，动不了的话，我们可以切换到第一个工作【Ctrl alt F1】，在这个工作台中杀死那个程序的进程。然后按【Ctrl alt F7】返回Ubuntu界面
+
+8-1 Linux-查找
+locate/find/grep
+locate命令: 
+locate命令用于查找符合条件的文档，它会去保存文档和目录名称的数据库内，查找合乎范本
+样式条件的文档或目录
+说明:
+locate与find 不同: find 是去硬盘找，locate 只在/var/lib/slocate资料库中找。
+locate的速度比find快，它并不是真的查找，而是查数据库，一般文件数据库在/var/lib/slocate/slocate.db中，所以locate的查找并不是实时的，而是以数据库的更新为准，一般是系统自己维护，也可以手工升级数据库 ，命令为：locate -u
+支持正则表达式:
+locate --regexp 参数xxx
+
+find命令:
+用来在指定目录下查找文件。任何位于参数之前的字符串都将被视为欲查找的目录名。
+如果使用该命令时，不设置任何参数， 则find命令将在当前目录下查找子目录与文件。
+并且将查找到的子目录和文件全部进行显示
+
+eg:
+下面命令会将po文件夹中所有目录和文件列出 
+ubuntu@clarence:~/test/wget-1.20/po$ find
+.
+./en_GB.gmo
+./uk.gmo
+./id.po
+./el.gmo
+...
+查看所有的txt文件
+ubuntu@clarence:~/test/wget-1.20$ find .|grep .txt    
+./tests/certs/server-template.txt
+./tests/certs/expired-template.txt
+./tests/certs/revoked-template.txt
+./tests/certs/test-ca-template.txt
+./tests/certs/invalid-template.txt
+./tests/certs/client-template.txt
+只列出文件 find . -type f
+只列出目录 find . -type d
+eg:
+ubuntu@clarence:~/test/mydir$ ls
+a.html  a.txt  b.txt  subdir
+ubuntu@clarence:~/test/mydir$ cd subdir
+ubuntu@clarence:~/test/mydir/subdir$ ls
+c.txt
+ubuntu@clarence:~/test/mydir/subdir$ cd -
+/home/ubuntu/test/mydir
+ubuntu@clarence:~/test/mydir$ find .
+.
+./a.html
+./b.txt
+./a.txt
+./subdir
+./subdir/c.txt
+ubuntu@clarence:~/test/mydir$ find .|grep .txt
+./b.txt
+./a.txt
+./subdir/c.txt
+ubuntu@clarence:~/test/mydir$ find . -type f
+./a.html
+./b.txt
+./a.txt
+./subdir/c.txt
+ubuntu@clarence:~/test/mydir$ find . -type d
+.
+./subdir
+ubuntu@clarence:~/test/mydir$ find . -type f -exec ls -l '{}' ';'
+-rw-rw-r-- 1 ubuntu ubuntu 0 Dec 19 22:42 ./a.html
+-rw-rw-r-- 1 ubuntu ubuntu 0 Dec 19 22:42 ./b.txt
+-rw-rw-r-- 1 ubuntu ubuntu 0 Dec 19 22:42 ./a.txt
+-rw-rw-r-- 1 ubuntu ubuntu 0 Dec 19 22:42 ./subdir/c.txt
+
+ubuntu@clarence:~/test/mydir$ find . -type f -exec grep hello '{}' ';'
+hello
+ubuntu@clarence:~/test/mydir$ find . -type f -exec grep hello '{}' ';' -print
+hello
+./a.txt
+ubuntu@clarence:~/test/mydir$ find . -type f -exec grep -n hello '{}' ';' -print
+1:hello
+./a.txt
+ubuntu@clarence:~/test/mydir$ find . -type f -exec grep -ni hello '{}' ';' -print //-ni出现的行号，忽略大小写
+1:Hello
+./b.txt
+1:hello
+./a.txt
+
+9-1 Linux-网络操作
+远程操作与数据传输(ssh工具与rsync工具)
+在远程管理Linux系统基本上都要使用到ssh,原因很简单: telnet、FTP等传输方式是以
+明文传送用户认证信息，本质上是不安全的，存在被网络窃听的危险。SSH(Secure Shell)目前
+较可靠，是专为远程登录会话和其他网站服务提供安全性的协议，利用SSH协议可以有效防止
+远程管理过程中的信息泄漏问题，通过SSH可对所有传输的数据进行加密，也能够防止DNS欺骗
+和IP欺骗。
+
+保证SSH安全性的方法，简单来说就是客户端和服务端各自生成一套私钥和公钥，并且互相交换公钥
+，这样每一条发出的数据都可以用对方的公钥来加密，对方收到后再用自己的私钥来解密
+
+“公私钥”认证方式简单的解释是: 
+首先在客户端上创建一对公私钥 （公钥文件：~/.ssh/id_rsa.pub； 私钥文件：~/.ssh/id_rsa），然后把公钥放到服务器上（~/.ssh/authorized_keys）, 自己保留好私钥，当ssh登录时,ssh程序会发送私钥去和服务器上的公钥做匹配.如果匹配成功就可以登录了
+
+
+ssh: 参考文档https://www.ssh.com/ssh/
+服务端监听端口22 openssh-server
+客户端			openssh-client
+
+客户端可以安装win10内置ssh客户端，下载后默认地址在C:\Windows\System32\OpenSSH
+通过ssh服务进行远程连接ssh服务端
+
+远程登录方法:
+1. 直接使用ssh 用户名@ip地址(域名) -p 端口号
+连接可以省略-p参数，因为默认端口是22,
+退出可以使用logout或者Ctrl-D
+C:\Users\Clarence>ssh ubuntu@xxx.xxx.xxx.xxx -p 22
+ubuntu@xxx.xxx.xxx.xxx's password:
+Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.10.2-041002-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+New release '18.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Thu Dec 20 21:27:23 2018 from 221.11.20.103
+ubuntu@clarence:~$ logout
+Connection to xxx.xxx.xxx.xxx closed.
+
+2. 在客户端本地生成公私钥
+C:\Users\Clarence>ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (C:\Users\Clarence/.ssh/id_rsa): //不输入默认为括号内文件夹
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in C:\Users\Clarence/.ssh/id_rsa.
+Your public key has been saved in C:\Users\Clarence/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:lVPHU9Gx8iEiCYSVMVWOA/wiRYMPf2tsp0NbMqENnwA clarence@Clarence
+The key's randomart image is:
++---[RSA 2048]----+
+|     o*B+......+=|
+|    .E ++ +o .o o|
+|     .* .++o o + |
+|     ..*.=o.. + .|
+|      ..S      . |
+|       . % o     |
+|        + B      |
+|         +       |
+|          .      |
++----[SHA256]-----+
+
+查看公钥和私钥id_rsa、id_rsa.pub
+known_hosts文件是当你设置了严格认证，目标机器的IP改变，只需在文件中
+删除目标IP所在行，重新认证即可。
+C:\Users\Clarence>cd C:\Users\Clarence\.ssh
+C:\Users\Clarence\.ssh>dir
+ C:\Users\Clarence\.ssh 的目录
+
+2018/12/19  11:49    <DIR>          .
+2018/12/19  11:49    <DIR>          ..
+2018/12/19  11:49             1,766 id_rsa
+2018/12/19  11:49               400 id_rsa.pub
+2018/12/19  11:02               177 known_hosts
+               3 个文件          2,343 字节
+               2 个目录 12,539,072,512 可用字节
+
+
+我们需要把公钥传递给服务器/home/username/.ssh/authorized_keys
+如果你的客户端是linux系统，可以使用如下:
+ubuntu@clarence:~$ ssh-copy-id username@ipAddress
+如果我们使用win10ssh:
+可以直接将生成的拷贝到/home/username/.ssh/authorized_keys目录
+
+我们登录，输入加密使用的passphrase,如果想要无密码登录，可以在上述产生
+公私钥过程中一直回车，采用默认值。
+C:\Users\Clarence\.ssh>ssh ubuntu@xxx.xxx.xxx.xxx
+Enter passphrase for key 'C:\Users\Clarence/.ssh/id_rsa':
+Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.10.2-041002-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+New release '18.04.1 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Thu Dec 20 21:27:45 2018 from 221.11.20.103
+
+
+服务器配置文件:
+/etc/ssh/ssh_config与/etc/ssh/sshd_config
+ssh_config和sshd_config都是ssh服务器的配置文件，二者区别在于，前者是针对客户端的配置
+文件，后者则是针对服务端的配置文件。两个配置文件都允许你通过设置不同的选项来改变客户端程序
+的运行方式。配置可参考:https://www.ssh.com/ssh/sshd_config/
+
+
+tmux中断复用神器的使用:
+参考文档:
+	https://robots.thoughtbot.com/a-tmux-crash-course
+	https://linuxize.com/post/getting-started-with-tmux/
+
+1. What is tmux?(什么是tmux?)
+Tmux is a terminal multiplexer an alternative to GNU Screen. In other words, it means that you can start a Tmux session and then open multiple windows inside that session. Each window occupies the entire screen and can be splitted into rectangular panes.
+
+With Tmux you can easily switch between multiple programs in one terminal, detach them and reattach them to a different terminal.
+
+Tmux sessions are persistent which means that programs running in Tmux will continue to run even if you get disconnected.
+
+All commands in Tmux start with a prefix, which by default is ctrl+b.
+
+
+2. Installing Tmux:(安装Tmux)
+$ sudo yum install tmux //CentOS and Fedora
+$ brew install tmux //macOS
+
+
+3. Starting Your First Tmux Session
+$ tmux
+This will open a new session, create a new window and start a shell in that window.
+
+Once you are in Tmux you’ll notice a status line at the bottom of the screen which shows information about the current session. 可以看到最后一行[]里面是0,这是默认会话的名称
+获取命令列表:
+Ctrl+b ?
+退出会话回到原来会话: logout 
+
+
+4. Creating Named Tmux Sessions 创建命名的会话:
+$ tmux new -s session_name
+最后一行关于会话的描述信息[]中为session_name会话名
+终端对应一个bash程序，每当打开一个终端都会启动一个bash进程，我们使用tmux之后
+可以看到有两个bash进程:
+ubuntu@clarence:~$ ps -e|grep bash
+ 6223 pts/8    00:00:00 bash
+ 6749 pts/9    00:00:00 bash
+
+参考文档:
+https://blog.csdn.net/ybxuwei/article/details/77149575
+
+5. Detaching from Tmux Session 可以从tmux创建的会话中回到原始会话，tmux会话会继续运行
+You can detach from the Tmux session and return to your normal shell by typing:
+Ctrl+b d
+The program running in the Tmux session will continue to run after you detach from the session
+
+6. Re-attaching to Tmux Session 重新链接到Tmux会话
+获取当前执行活动的列表，获取每个活动的名字(如果未命名是数字递增形式)，然后通过命令进入想要的会话
+To attach a session first you need to find the name of the session. To get a list of the current running sessions type:
+$ tmux ls 
+The name of the session is the first column of the output.
+Output
+0: 1 windows (created Sat Sep 15 09:38:43 2018) [158x35]
+my_named_session: 1 windows (created Sat Sep 15 10:13:11 2018) [78x35]
+As you can see from the output, there are two running Tmux sessions, the first one is named 0 and the second one my_named_session.
+
+For example, to attach to the session 0 we would type:
+$ tmux attach-session -t 0
+注: 可以直接使用tmux a回到最近的一次tmux session
+另外退出终端之后(putty等终端),还可以继续进入tmux session,这意味着就不害怕网络终端
+等等突发情况了，当然也可以使用nohup不挂断地运行命令 nohup command &
+
+eg:
+ubuntu@clarence:~$ tmux new -s clarence //创建一个新的tmux会话,名字为clarence
+ubuntu@clarence:~$ tmux ls //在clarence会话中列出所有tmux会话，可以看到有一个，状态是attached连接状态
+clarence: 1 windows (created Fri Dec 21 19:43:39 2018) [80x23] (attached)
+[detached (from session clarence)] //从会话clarence分离出来(Ctrl+b d)
+ubuntu@clarence:~$ tmux ls //在原始会话中查看tmux会话
+clarence: 1 windows (created Fri Dec 21 19:45:40 2018) [80x23]
+ubuntu@clarence:~$ tmux attach-session -t clarence //回到clarence会话
+
+
+远程同步(rsync remote synchronization):
+rsync命令是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件。rsync使用所谓的“rsync算法”
+来使本地和远程两个主机之间的文件达到同步，这个算法只传送两个文件的不同部分，而不是每次都整份传送，
+因此速度相当快。
+eg: 
+将本地mydir同步到远程服务器的指定目录
+1. ubuntu@clarence:~$ rsync -r mydir username@ip: //:后面可以接目录，默认为/home/username/
+2.我们也可以用之前windows的OpenSSH服务的scp程序(ubuntu自带)上传文件:
+scp是有Security的文件copy，基于ssh登录。操作起来比较方便
+C:\Users\Clarence>scp C:\Users\Clarence\Desktop\headfirstHtmlAndCSS\chapter0\test.html  ubuntu@ip:
+Enter passphrase for key 'C:\Users\Clarence/.ssh/id_rsa':
+test.html
+在服务器上查看上传成功:
+ubuntu@clarence:~$ ls -a|grep test.html
+test.html
+
+10-1 Linux-软件安装
+
+1.手动安装
+(1). 安装编译好的软件
+地址: https://download.sublimetext.com/sublime_text_3_build_3176_x64.tar.bz2
+去官网，安装对应Linux版本软件，然后解压，安装
+ubuntu@clarence:~/test$ ls 
+happygrep-master      mydir                                  wget-1.20
+happygrep-master.zip  sublime_text_3_build_3176_x64.tar.bz2  wget-late.tar.gz
+ubuntu@clarence:~/test$ tar jxvf sublime_text_3_build_3176_x64.tar.bz2 //解压
+要直接运行可执行文件，可以加入环境变量或者创建链接
+1. 暂时加入系统环境变量 
+ubuntu@clarence:/usr/games$ export PATH=$PATH:/home/ubuntu/test/sublime 
+ubuntu@clarence:/usr/games$ sublime_text
+2. 用ln命令给文件创建软连接
+ubuntu@clarence:~/test/sublime$ sudo ln -s ~/test/sublime/sublime_text /usr/local/bin/subl
+ubuntu@clarence:~/test/sublime$ subl
+
+(2). 下载源码、编译、安装
+源码的安装步骤一般由三个步骤组成 配置(configure)、编译(make)、安装(make install
+将二进制程序移动到bin目录下)
+地址:http://ftp.gnu.org/gnu/hello/
+ubuntu@clarence:~/test$ ls
+happygrep-master      mydir                                  wget-1.20
+happygrep-master.zip  sublime                                wget-late.tar.gz
+hello-2.2.tar.bz2     sublime_text_3_build_3176_x64.tar.bz2
+ubuntu@clarence:~/test$ tar jxvf hello-2.2.tar.bz2 hello-2.2
+ubuntu@clarence:~/test/hello-2.2$ ls
+ABOUT-NLS   ChangeLog    configure.ac  gnulib       man     src
+aclocal.m4  ChangeLog.O  contrib       INSTALL      NEWS    tests
+AUTHORS     config.in    COPYING       Makefile.am  po      THANKS
+build-aux   configure    doc           Makefile.in  README  TODO
+ubuntu@clarence:~/test/hello-2.2$ ./configure
+ubuntu@clarence:~/test/hello-2.2$ make
+ubuntu@clarence:~/test/hello-2.2$ sudo make install
+ubuntu@clarence:~/test/hello-2.2$ hello
+Hello, world!
+
+
+2. deb包
+deb是Debian Linux的安装格式，跟Red Hat的rpm非常相似，
+最基本的安装命令是：dpkg -i file.deb
+dpkg 是Debian Package的简写，是为Debian 专门开发的套件管理系统，
+方便软件的安装、更新及移除。所有源自Debian的Linux发行版都使用dpkg，
+例如Ubuntu、Knoppix 等。
+dpkg命令:
+dpkg -i package.deb     #安装包
+dpkg -r package         #删除包
+dpkg -P package         #删除包（包括配置文件）
+dpkg -L package         #列出与该包关联的文件
+dpkg -l package         #显示该包的版本
+dpkg --unpack package.deb  #解开deb包的内容
+dpkg -S keyword            #搜索所属的包内容
+dpkg -l                    #列出当前已安装的包
+dpkg -c package.deb        #列出deb包的内容
+dpkg --configure package   #配置包
+
+
+deb包包含程序本身、配置文件、安装位置、依赖关系
+ubuntu@clarence:~/test$ wget \
+> https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+ubuntu@clarence:~/test$ ls | grep google-chrome-stable_current_x86_64.rpm google-chrome-stable_current_x86_64.rpm
+dpkg -l显示已安装软件包列表
+ubuntu@clarence:~/test$ dpkg -l|grep chrome
+ii  chrome-gnome-shell                         9-0ubuntu1~ubuntu16.04.3                     all          GNOME Shell extensions integration for web browsers
+dpkg -L 显示于软件包关联的文件
+ubuntu@clarence:~/test$ dpkg -L  chrome-gnome-shell
+/.
+/etc
+/etc/opt
+/etc/opt/chrome
+/etc/opt/chrome/native-messaging-hosts
+/etc/opt/chrome/native-messaging-hosts/org.gnome.chrome_gnome_shell.json
+/etc/opt/chrome/policies
+/etc/opt/chrome/policies/managed
+/etc/opt/chrome/policies/managed/chrome-gnome-shell.json
+......
+ubuntu@clarence:~/test$ dpkg -S /usr/share/icons/gnome/16x16/apps/org.gnome.ChromeGnomeShell.png
+chrome-gnome-shell: /usr/share/icons/gnome/16x16/apps/org.gnome.ChromeGnomeShell.png
+我们也可以使用dpkg命令来删除软件包
+
+
+3. 从apt-get仓库安装
+apt-get的介绍: 
+参考文档: https://www.computerhope.com/unix/apt-get.html
+apt-get - APT package handling utility - command-line interface
+apt-cache的介绍:
+参考文档: https://www.computerhope.com/unix/apt-get.htm
+apt-cache - Get information about software packages available through APT.
+在这里apt-get和apt的区别如下:
+The `apt` command is meant to be pleasant for end users and does not need
+to be backward compatible like apt-get(8).
+
+查看apt-get可以使用的命令:
+ubuntu@clarence:~/test$ apt-get --help
+apt 1.2.24 (amd64)
+Usage: apt-get [options] command
+       apt-get [options] install|remove pkg1 [pkg2 ...]
+       apt-get [options] source pkg1 [pkg2 ...]
+
+apt-get is a command line interface for retrieval of packages
+and information about them from authenticated sources and
+for installation, upgrade and removal of packages together
+with their dependencies.
+
+Most used commands:
+update - Retrieve new lists of packages
+upgrade - Perform an upgrade
+install - Install new packages (pkg is libc6 not libc6.deb)
+remove - Remove packages
+purge - Remove packages and config files
+autoremove - Remove automatically all unused packages
+dist-upgrade - Distribution upgrade, see apt-get(8)
+dselect-upgrade - Follow dselect selections
+build-dep - Configure build-dependencies for source packages
+clean - Erase downloaded archive files
+autoclean - Erase old downloaded archive files
+check - Verify that there are no broken dependencies
+source - Download source archives
+download - Download the binary package into the current directory
+changelog - Download and display the changelog for the given package
+
+See apt-get(8) for more information about the available commands.
+Configuration options and syntax is detailed in apt.conf(5).
+Information about how to configure sources can be found in sources.list(5).
+Package and version choices can be expressed via apt_preferences(5).
+Security details are available in apt-secure(8).
+This APT has Super Cow Powers.
+
+apt-cache可查找apt软件包
+ubuntu@clarence:~/test$ apt-cache search ncurse|less
+
+ubuntu@clarence:~/test$ sudo apt-get install libncurses //可以通过tab键来列出所有的备选项
+libncurses5         libncursesada3-dev  libncursesw5
+libncurses5-dbg     libncursesada-dbg   libncursesw5-dbg
+libncurses5-dev     libncursesada-doc   libncursesw5-dev
+libncursesada3      libncurses-gst
+安装包
+ubuntu@clarence:~/test$ sudo apt-get isntall git
+删除包
+remove 删除包
+purge 删除包同时删除配置文件
