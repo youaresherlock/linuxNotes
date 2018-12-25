@@ -501,7 +501,10 @@ ubuntu@clarence:~/test/mydir$ find . -type f -exec grep -ni hello '{}' ';' -prin
 首先在客户端上创建一对公私钥 （公钥文件：~/.ssh/id_rsa.pub； 私钥文件：~/.ssh/id_rsa），然后把公钥放到服务器上（~/.ssh/authorized_keys）, 自己保留好私钥，当ssh登录时,ssh程序会发送私钥去和服务器上的公钥做匹配.如果匹配成功就可以登录了
 
 
-ssh: 参考文档https://www.ssh.com/ssh/
+ssh: 
+参考文档
+https://www.ssh.com/ssh/ 
+https://www.attachmate.com/documentation/rsit-unix-802/rsit-unix-guide/data/ssh_options_ap.htm
 服务端监听端口22 openssh-server
 客户端			openssh-client
 
@@ -829,5 +832,179 @@ purge 删除包同时删除配置文件
 
 
 11-1 Linux-shell脚本编程
+Shell是一个用C语言编写的程序，它是用户使用Linux的桥梁.这个应用程序提供了一个界面，
+用户通过这个界面访问操作系统内核的服务。
+Shell脚本(shell script)是一种为shell编写的脚本程序。
+
+技巧:
+(1) 指定解析器
+脚本第一行是#!/usr/bin/env ruby or python or bash....
+#!是一个约定的标记，它告诉系统这个脚本需要什么解释器来执行，即使用哪种shell解析器.
+
+(2)语句即命令
+语句即命令，命令对空格非常敏感
+
+(3) 位置参数
+我们可以在执行 Shell 脚本时，向脚本传递参数，脚本内获取参数的格式为：$n。n 代表一个数字，1 为执行脚本的第一个参数，2 为执行脚本的第二个参数，以此类推……
+eg:
+ubuntu@clarence:~/test$ vi test.sh
+ubuntu@clarence:~/test$ chmod +x test.sh
+ubuntu@clarence:~/test$ cat test.sh
+echo "
+Number of arguments: $#
+The program name is: $0
+The first argument is: $1
+"
+执行并输入参数(这里与c语言不太一样int main(int argc, char *argv[])):
+ubuntu@clarence:~/test$ ./test.sh "parameter1" "parameter2"
+
+Number of arguments: 2
+The program name is: ./test.sh
+The first argument is: parameter1
+
+(4) 脚本不在当前shell执行
+当执行./shellname.sh脚本时，不是在当前shell中执行，而是新开一个shell执行
+eg:
+peter.sh脚本如下:
+```bash {.line-numbers}
+#! /usr/bin/env bash
+cd /home/ubuntu/test/mydir
+touch a.txt
+```
+
+使用./shellname.sh执行，shellname.sh需执行权限
+./FileName
+   作用:打开一个子shell来读取并执行FileName中命令。该filename文件需要"执行权限"
+ubuntu@clarence:~/test$ pwd
+/home/ubuntu/test
+ubuntu@clarence:~/test$ sudo vi peter.sh //创建peter.sh脚本，内容如下
+ubuntu@clarence:~/test$ sudo chmod +x peter.sh //加入可执行权限
+ubuntu@clarence:~/test$ ls | grep peter.sh 
+peter.sh
+ubuntu@clarence:~/test$ ls mydir/
+a.html  b.txt  subdir
+ubuntu@clarence:~/test$ ./peter.sh
+ubuntu@clarence:~/test$ pwd
+/home/ubuntu/test
+ubuntu@clarence:~/test/mydir$ cd ..
+ubuntu@clarence:~/test$ ls mydir/
+a.txt  a.html  b.txt  subdir
+注意工作目录一直没有改变，说明脚本中的语句不是在当前shell中执行的
+
+使用source shellname.sh执行，shellname.sh可无执行权限
+source FileName
+　　作用:在当前bash环境下读取并执行FileName中的命令。该filename文件可以无"执行权限"
+ubuntu@clarence:~/test$ source peter.sh
+ubuntu@clarence:~/test/mydir$ ls
+aaa.txt  a.html  b.txt  subdir
+ubuntu@clarence:~/test/mydir$ pwd
+/home/ubuntu/test/mydir 
+目录改变
+
+使用sh/bash shellname.sh执行,shellname.sh可无执行权限
+sh/bash FileName
+	作用:打开一个子shell来读取并执行FileName中命令。该filename文件可以无"执行权限"
+ubuntu@clarence:~/test$ sh peter.sh
+ubuntu@clarence:~/test$ pwd
+/home/ubuntu/test
+ubuntu@clarence:~/test$ ls mydir/
+aaa.txt  a.html  b.txt  subdir
+目录不变
+
+(5) 循环控制
+实践:将a,b,c文件名加上后缀.txt
+ubuntu@clarence:~$ ls test/mydir/
+a  b  c  subdir
+ubuntu@clarence:~$ vim rename.sh
+ubuntu@clarence:~$ cat rename.sh
+#!/usr/bin/env bash
+
+cd $1
+
+for file in a b c
+do
+ mv $file $file.txt
+done
+ubuntu@clarence:~$ chmod +x rename.sh
+ubuntu@clarence:~$ ./rename.sh test/mydir/
+ubuntu@clarence:~$ ls test/mydir/
+a.txt  b.txt  c.txt  subdir
+由于在for循环中使用硬编码的方式,我们可以通用化.
+通常情况下，在shell脚本中需要获取命令的输出内容，然后根据输出内容判断下一步的执行操作。
+比较常用的一种方式就是， 匹配命令输出的内容中是否存在某些关键字，选择执行的不同动作。
+比较常用的一种方式就是采用反向单引号的方式 --  保存结果的变量名=`需要执行的linux命令`
+利用``取出所需文件列表,我们可以将指定目录下的所有符合条件的文件重新命名
+ubuntu@clarence:~/test$ ls yourdir/
+ash  bob  jim
+ubuntu@clarence:~$ cat rename.sh
+#!/usr/bin/env bash
+
+cd $1
+echo I am in `pwd`
+
+for file in `ls`
+do
+  mv $file $file.txt
+done
+ubuntu@clarence:~$ ./rename.sh test/yourdir/
+I am in /home/ubuntu/test/yourdir
+ubuntu@clarence:~$ ls test/yourdir/
+ash.txt  bob.txt  jim.txt
 
 
+(6) 远程执行
+可以在本地远程通过sh文件在远程机上执行命令本地的脚本程序
+
+eg: 在远程服务器上用户主目录创建一个名为a.txt的文件
+#!/usr/bin/env bash
+ssh -t peter@happycasts.net `touch test.txt` 
+
+(7) 确认执行
+我们可以在本地远程进行对指定目录进行同步，前面也提到了
+下面是本地代码yourdir_sync.sh
+#!/usr/bin/env bash
+
+sync_dryrun()
+{
+  echo
+  # 改变输出颜色
+  echo -e "\033[1m ...dryrun... \033[0m"
+  # --dry-run显示哪些文件将被传输
+  rsync -av --delete ~/test/yourdir/ ubuntu@happycasts.net:~/test/yourdir/ --dry-run
+  echo -e "\033[1m ...dryrun... \033[0m"
+  echo
+}
+sync_dryrun
+
+sync_server()
+{
+  echo
+  echo -e "\033[1m... syncing... \033[0m"
+  rsync -av --delete ~/test/yourdir/ ubuntu@happycasts.net:~/test/yourdir/
+  echo -e "\033[1m ...done... \033[0m"
+  echo
+}
+
+echo -n "Want to sync? (Y/n): "
+read AAA # 这里read读取第一个输入的参数， 如果为空字符串(输入回车), 默认值是y,则同步服务器
+if [ "${AAA:-y}" = "y" ];then
+  sync_server
+fi
+
+注:
+shell中给变量设置默认值:
+1.变量为null时
+# 当变量a为null时则var = b
+var=${a-b}
+
+2.变量为null或为空字符串的时候
+#当变量a为null或为空字符串时var=b
+var=${a:-b}
+
+参考地址:
+大佬将自己几年的使用linux的经验简单浓缩了起来，当然只是对于初级开发者的教程
+感谢happypeter老师的课程,我在其视频基础上增加了一些补充
+developer: happypeter 
+course: Linux Guide for Developers
+它的开源的一本linux Command Line book，大家可以作为参考工具:
+http://billie66.github.io/TLCL/book/
