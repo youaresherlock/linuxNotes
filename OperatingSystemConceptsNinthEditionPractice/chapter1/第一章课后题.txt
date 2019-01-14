@@ -1,0 +1,365 @@
+CHAPTER 1 
+ 
+Chapter 1 introduces the general topic of operating systems and a handful of important 
+concepts (multiprogramming, time sharing, distributed system, and so on). The purpose is 
+to show why operating systems are what they are by showing how they developed. In 
+operatingsystems, as in much of computer science, we are led to the present by the paths 
+we took in the past, and we can better understand both the present and the future by 
+understanding the past.  
+第一章介绍了操作系统的一般主题和一些重要的内容概念(多程序设计、分时、分布式系统等)。这样
+做的目的是通过展示操作系统是如何发展的，来展示它是什么。在操作系统，正如在许多计算机
+科学中一样，我们是由过去的发展引导到现在。我们可以通过了解过去更好的了解现在和未来。
+ 
+Additional work that might be considered is learning about the particular systems that 
+the students will have access to at your institution. This is still just a general 
+overview, as specific interfaces are considered in Chapter 3. 
+需要额外考虑的工作是了解学生可以在机构访问的特定系统。这仍然只是一个一般的概述，具体的
+接口将在第3章讨论。
+
+Exercises 
+ 
+1.1 In a multiprogramming and time-sharing environment, several users share the system 
+simultaneously. This situation can result in various security problems. 
+在多道程序和分时环境中，多个用户同时共享一个系统。这种情况可能导致各种安全问题。
+	a. What are two such problems? 
+	a. 列出两个这类问题
+	b. Can we ensure the same degree of security in a time-shared machine as 
+in a dedicated machine? Explain your answer. 
+	b. 我们是否能够确保分时系统达到如同专用系统一样的安全程度?请解释你的答案
+
+	Answer: 
+	a. Stealing or copying one’s 
+programs or data; using system resources (CPU, memory, disk space, peripherals) without 
+proper accounting. 
+	a. 偷窃或抄袭某人的程序或数据(数据安全，代码漏洞等等);没有统计下地使用系统资源
+(CPU,内存，磁盘空间，外设)
+	b. Probably not, since any protection scheme devised by humans can 
+inevitably be broken by a human, and the more complex the scheme, the more difficult 
+it is to feel confident of its correct implementation. 
+	b.可能不会，因为任何由人类设计的保护方案都不可避免的被人打破，方案越复杂，就越
+难以对其正确实施感到自信(漏洞是存在的，只不过没有被发现0day漏洞)
+
+
+1.2 The issue of resource utilization shows up in different forms in different types of 
+operating systems. List what resources must be managed carefully in the following 
+settings: 
+对于资源利用问题，不同类型的操作系统具有不同的处理方式。列出下列情况，哪些应对资源认
+真管理:
+	a. Mainframe or minicomputer systems  
+	a.大型机或小型机
+	b. Workstations connected to servers 
+	b. 连接服务器的工作站
+	c. Handheld computers
+	c.掌上电脑 
+
+Answer: 
+	a. Mainframes: memory and CPU resources, storage, network 
+bandwidth 
+	a. 大型机: 内存和CPU资源、存储、网络带宽
+	b. Workstations: memory and CPU resources 
+	b. 工作站: 内存和CPU资源
+	c. Handheld computers: power 
+consumption, memory resources
+	c. 掌上电脑: 电源消耗，内存资源
+
+
+1.3 Under what circumstances would a user be better off using a timesharing system 
+rather than a PC or a single-user workstation? 
+在何种环境下，分时系统优于PC或单用户工作站?
+Answer: 
+	When there are few other users, the task is large, and the hardware is fast, time-sharing 
+makes sense. The full power of the system can be brought to bear on the user’s problem.
+The problem can be solved faster than on a personal computer. Another case occurs when 
+lots of other users need resources at the same time. A personal computer is best when the 
+job is small enough to be executed reasonably on it and when performance is sufficient to 
+execute the program to the user’s satisfaction. 
+	当其他用户很少时，任务很大，硬件速度块，分时是有意义的。系统的全部功能可以解决
+用户的问题。这个问题比在个人PC解决更快速。另一种情况发生在许多其他用户同时需要资源。
+当作业足够小，能够在其上合理地执行，个人电脑是最好的，并且性能足够执行令用户满意
+的程序。
+
+
+1.4 Describe the differences between symmetric and asymmetric multiprocessing. What are t
+hree advantages and one disadvantage of multiprocessor systems? 
+描述对称多处理和非对称多处理的区别。多处理系统有哪三个优点和哪一个缺点?
+Answer: 
+	Symmetric multiprocessing treats all processors as equals, and I/O can be processed on 
+any CPU. Asymmetric multiprocessing has one master CPU and the remainder CPUs are slaves. 
+The master distributes tasks among the slaves, and I/O is usually done by the master only. 
+Multiprocessors can save money by not duplicating power supplies, housings, and 
+peripherals. They can execute programs more quickly and can have increased reliability. 
+They are also more complex in both hardware and software than uniprocessor systems. 
+	对称多处理将所有处理器视为对等的，并且I/O操纵可以在任何CPU上执行。非对称多处理
+器具有一个主CPU，其余CPU为从CPU。主处理器负责分发给从处理器任务，并且I/O通常只由主
+处理器完成。多处理器可以共享电源，外壳和其他设备来节省金钱。它们可以更块地执行程序，
+提高可靠性。它们在硬件和软件方面也比单处理器系统复杂。
+
+
+1.5 How do clustered systems differ from multiprocessor systems? What is required for two 
+machines belonging to a cluster to cooperate to provide a highly available service? 
+集群系统与多处理器系统有何不同?如何让同一集群的两个机器互相协作以便提供高可用性服务?
+Answer: 
+	Clustered systems are typically constructed by combining multiple computers into a single 
+system to perform a computational task distributed across the cluster. Multiprocessor 
+systems on the other hand could be a single physical entity comprising of multiple CPUs. 
+A clustered system is less tightly coupled than a multiprocessor system. Clustered 
+systems communicate using messages, while processors in a multiprocessor system could 
+communicate using shared memory.  In order for two machines to provide a highly available 
+service, the state on the two machines should be replicated and should be consistently 
+updated. When one of the machines fails, the other could then takeover the functionality 
+of the failed machine. 
+	集群系统通常是通过将多台计算机组合成一台计算机来构建系统执行分布在集群中的计算
+任务。另一方面，系统可以是由多个cpu组成的单一物理实体。集群系统的耦合没有多处理器系
+统紧密。集群系统使用消息进行通信，而多处理器系统中的处理器可以使用共享内存进行通信。
+为了给两个机器提供一个高可用性服务时，应该复制两台机器上的状态并保持一致更新。当其
+中一台机器出现故障时，另一台机器就可以接管该故障的机器的工作。
+(如zookeeper框架就是来协调分布式各个节点的服务的，大家有兴趣玩玩)
+
+
+1.6 Consider a computing cluster consisting of two nodes running a database. Describe two 
+ways in which the cluster software can manage access to the data on the disk. Discuss the 
+benefits and disadvantages of each. 
+现有一个运行数据库的两个节点集群。给出两种方法，以便集群软件管理磁盘数据访问。讨论每
+种方法的优点和缺点
+Answer: 
+	Consider the following two alternatives: asymmetric clustering and parallel clustering. 
+With asymmetric clustering, one host runs the database application with the other host 
+simply monitoring it. If the server fails, the monitoring host becomes the active server. 
+This is appropriate for providing redundancy. However, it does not utilize the potential 
+processing power of both hosts. With parallel clustering, the database application can 
+run in parallel on both hosts. The difficulty in implementing parallel clusters is 
+providing some form of distributed locking mechanism for files on the shared disk. 
+	考虑一下两种选择: 非对称集群和并行集群。使用非对称集群，一个主机与另一个主机一
+起运行数据库应用程序并简单的监控。如果服务器失败，监视主机将成为活动服务器。这适用于
+提供冗余，然而，它并没有充分利用两个主机的处理能力。通过并行聚集，可以实现数据库应用
+在两台主机上并行运行。实现并行集群的困难在于为共享磁盘上的文件提供某种形式的分布式锁
+定机制。(redis分布式锁，zookeeper瞬时有序结点实现的分布式锁)
+
+
+1.7 How are network computers different from traditional personal computers? Describe 
+some usage scenarios in which it is advantageous to use network computers. 
+网络计算机与传统计算机有何不同?讨论在那些情况下采用网络计算机更为有利?
+Answer: 
+	A network computer relies on a centralized computer for most of its services. It 
+can therefore have a minimal operating system to manage its resources. A personal 
+computer on the other hand has to be capable of providing all of the required 
+functionality in a stand-alone manner without relying on a centralized manner. Scenarios 
+where administrative costs are high and where sharing leads to more efficient use of 
+resources are precisely those settings where network computers are preferred. 
+	网络计算机的大部分服务依赖于中央计算机。它可以使用最小的操作系统来管理其资源。(可
+以联想智能电表)个人电脑另一方面可以提供所有需要的独立的功能，而不依赖于集中的方式。
+管理成本高、共享可以更有效地使用资源的场景是首选网络计算机
+
+
+1.8 What is the purpose of interrupts? What are the differences between a trap and an 
+interrupt? Can traps be generated intentionally by a user program? If so, for what purpose? 
+中断有何用途?中断和陷阱的不同?用户程序能否有意产生陷阱?如果能，为什么?
+Answer: 
+	An interrupt is a hardware-generated change of flow within the system. An interrupt 
+handler is summoned to deal with the cause of the interrupt; control is then returned 
+to the interrupted context and instruction. A trap is a software-generated interrupt. 
+An interrupt can be used to signal the completion of an I/O to obviate the need for 
+device polling. A trap can be used to call operating system routines or to catch 
+arithmetic errors
+	中断是系统中由硬件产生的流变化。调用中断处理程序来解决造成中断的原因;控制返回到
+中断的上下文和指令处。陷阱是由软件产生的中断，中断可以用来发出I/O完成的信号，以消除
+对设备轮询。陷阱可以用来调用操作系统例程或捕获算数错误。
+
+
+1.9 Direct memory access is used for high-speed I/O devices in order to avoid 
+increasing the CPU’s execution load. 
+直接内存访问(DMA)用于高速I/O设备来避免CPU增加运行负荷。
+	a. How does the CPU interface with the device to coordinate the transfer? 
+	a. CPU与设备如何协作传递?
+	b. How does the CPU know when the memory operations are complete? 
+	b. CPU如何得知内存操作何时结束?
+	c. The CPU is allowed to execute other programs while the DMA controller is 
+transferring data. Does this process interfere with the execution of the user 
+programs? If so, describe what forms of interference are caused.
+	c. 当DMA控制传递数据时，允许CPU执行用户程序。这两者会不会冲突? 如果会，讨论会产生
+何种冲突?
+Answer: 
+	The CPU can initiate a DMA operation by writing values into special registers 
+that can be independently accessed by the device. The device initiates the corresponding 
+operation once it receives a command from the CPU. When the device is finished with its 
+operation, it interrupts the CPU to indicate the completion of the operation. Both the
+device and the CPU can be accessing memory simultaneously. The memory controller provides 
+access to the memory bus in a fair manner to these two entities. A CPU might therefore be 
+unable to issue memory operations at peak speeds since it has to compete with the device 
+in order to obtain access to the memory bus. 
+	CPU 可以通过将值写入可以被设备独立访问的特殊寄存器来启动DMA操作。当它从CPU接收
+到命令后，设备开始相应的操作。当设备执行完操作后，它发出中断请求CPU指示操作完成。设备
+和CPU可能同时访问内存，内存控制器提供以公平的方式访问这两个实体的内存总线。因此，
+CPU可能是无法在峰值速度下发出内存操作，因为它必须与设备竞争以便获得对内存总线的
+访问权(地址总线、控制总线、数据总线)。
+
+
+1.10 Some computer systems do not provide a privileged mode of operation in hardware. 
+Is it possible to construct a secure operating system for these computer systems? Give 
+arguments both that it is and that it is not possible. 
+有些计算机系统不支持硬件运行的特权操作模式。能否为这些计算机系统构建一种安全操作系
+统?给出理由。
+Answer: 
+	An operating system for a machine of this type would need to remain in control (or 
+monitor mode) at all times. This could be accomplished by two methods: 
+	这类机器的操作系统需要时刻保持受控制和受到监视。这可以通过两种方法来实现:
+	a. Software interpretation of all user programs (like some BASIC, Java, and LISP 
+systems, for example). The software interpreter would provide, in software, what the 
+hardware does not provide. 
+	a. 为所有用户程序提供软件解释器(Basic, java, Lisp系统等)。软件解释器将在软
+件中提供，硬件不提供
+	b. Require that all programs be written in high-level languages so that all object 
+code is compilerproduced. The compiler would generate (either in-line or by function 
+calls) the protection checks that the hardware is missing. 
+	b. 要求所有的程序用高级语言编写，所有的对象代码可以被编译生成。编译器可以产生
+(内联或者函数调用方式)保护检查硬件是否丢失。
+
+
+1.11 Many SMP systems have different levels of caches; one level is local to each 
+processing core, and another level is shared among all processing cores. Why are caching 
+systems designed this way? 
+许多SMP系统有不同层次的缓存，有的缓存是为了单个处理核专用的，而有的缓存是为所有处
+理核共用的。为什么这么设计缓存系统?
+Answer: 
+	The different levels are based on access speed as well as size. In general, the 
+closer the cache is to the CPU, the faster the access. However, faster caches are 
+typically more costly. Therefore, smaller and faster caches are placed local to each CPU, 
+and shared caches that are larger, yet slower, are shared among several different 
+processors. 
+	不同层次是基于访问速度和大小。一般来说，缓存离CPU越近，访问速度越快(越近实际上
+容量也越小)。然而，更快的缓存通常更昂贵.因此更小更快的缓存被放置在每个CPU的本地，
+较大但较慢的共享缓存在几个不同的缓存之间共享处理器。
+
+
+1.12 Consider an SMP system similar to the one shown in Figure 1.6. Illustrate with an 
+example how data residing in memory could in fact have a different value in each of the 
+local caches. 
+类似图1-6的SMP系统，举例说明为什么内存数据有可能不同于本地缓存数据。
+Answer: 
+	Say processor 1 reads data A with value 5 from main memory into its local cache. 
+Similarly, processor 2 reads data A into its local cache as well. Processor 1 then 
+updates A to 10. However, since A resides in processor 1’s local cache, the update only 
+occurs there and not in the local cache for processor 2. 
+	处理器1从主内存读取A的值是5，保存到本地缓存中.相似的，处理器2从主内存也读取A
+的值。处理器1然后将A更改成10.然而，因为A在处理器1的本地缓存中，更新只在这里而不再
+处理器2的本地缓存。(这里实际上有两个问题，一个是处理器1更新时再自己本地缓存更新，
+一个是处理器2的值就是旧值，得不到最新的A值。大家可以阅读缓存一致性的文章，但是还不
+保证变量的可见性，详见Java volatile)
+
+
+1.13 Discuss, with examples, how the problem of maintaining coherence of cached data
+manifests itself in the following processing environments: 
+举例说明在下列环境下，如何维护告诉缓存的数据一致性:
+	a. Single-processor systems 
+	a. 单处理器系统
+	b. Multiprocessor systems 
+	b. 多处理器系统
+	c. Distributed systems 
+	c. 分布式系统
+Answer: 
+	In single-processor systems, the memory needs to be updated when a processor issues 
+updates to cached values. These updates can be performed immediately or in a lazy manner. 
+In a multiprocessor system, different processors might be caching the same memory location 
+in its local caches. When updates are made, the other cached locations need to be 
+invalidated or updated. In distributed systems, consistency of cached memory values is 
+not an issue. However, consistency problems might arise when a client caches file data. 
+	在单处理器系统中，当处理器发出对缓存值的更新时，需要更新内存。这些更新可以
+立即执行，也可以延迟执行。在多处理器系统中，不同的处理器可能缓存相同的内存位置
+在它的本地缓存中。当进行更新时，其他位置的缓存需要失效或者更新。在分布式系统中
+，缓存内存值的一致性不是问题。但是，当客户机缓存文件数据时，可能会出现一致性问题。
+
+
+1.14 Describe a mechanism for enforcing memory protection in order to prevent a program 
+from modifying the memory associated with other programs. 
+请描述一种机制以加强内存保护，防止一个程序修改与其他程序相关的内存
+Answer: 
+	The processor could keep track of what locations are associated with each process and 
+limit access to locations that are outside of a program’s extent. Information regarding 
+the extent of a program’s memory could be maintained by using base and limits registers 
+and by performing a check for every memory access. 
+	处理器可以跟踪与每个进程相关联的位置，限制对程序范围之外的位置的访问。关于程
+序内存范围的信息可以通过使用基本寄存器和限制寄存器来维护并通过对每个内存地址的访
+问执行检查。这里有一个简洁介绍这两个寄存器(http://www.answers.com/Q/Base_limit_register)
+
+
+1.15 Which network configuration—LAN or WAN—would best suit the following environments? 
+有些题有些挑战，这道题很简单。下面情景中适合什么样的网络?
+	a. A campus student union 
+	a. 大学校园的学生会
+	b. Several campus locations across a statewide university system 
+	b. 一个大学的多个省内校园
+	c. A neighborhood 
+	c. 邻里之间
+Answer: 
+	a. LAN 
+	b. WAN 
+	c. LAN or WAN 
+
+
+1.16 Describe some of the challenges of designing operating systems for mobile devices 
+compared with designing operating systems for traditional PCs.
+描述为移动设备设计操作系统与传统pc操作系统设计相比的一些挑战
+Answer: 
+	The greatest challenges in designing mobile operating systems include:  Less storage 
+capacity means the operating system must manage memory carefully.  The operating system 
+must also manage power consumption carefully.  Less processing power plus fewer 
+processors mean the operating system must carefully apportion processors to applications. 
+	在设计移动操作系统最大的挑战包括: 更少的存储容量意味着操作系统必须仔细管
+理内存。(塞班系统Leave机制导致内存泄露)。操作系统还必须认真管理用电。更少的电
+能和更少的处理器意味着操作系统必须更小心的分配处理器给应用
+ 
+
+ 1.17 What are some advantages of peer-to-peer systems over client-server systems? 
+ 与c/s系统相比，对等系统有何优点?
+ Answer: 
+ 	Peer-to-peer is useful because services are distributed across a collection of peers, 
+ rather than having a single, centralized server. Peer-to-peer provides fault tolerance 
+ and redundancy. Also, because peers constantly migrate, they can provide a level of 
+ security over a server that always exists at a known location on the Internet. 
+ Peer-to-peer systems can also potentially provide higher network bandwidth because you 
+ can collectively use all the bandwidth of peers, rather than the single bandwidth that 
+ is available to a single server. 
+ 	对等系统很有用，因为服务分布在一组对等点上，而不是拥有一个单一的集中的
+服务器。对等提供容错功能和冗余。而且，由于对等点不断迁移，他们可以通过始终唯一Internet
+上已知位置的服务器提供一定级别的安全性。对等系统还可以潜在地提供更高的网络带宽，因为你
+可以集体使用所有的带宽的对等点，而不是单一服务的。
+
+
+1.18 Describe some distributed applications that would be appropriate for a 
+peer-to-peer system. 
+描述一些适合对等系统的分布式应用
+Answer: 
+	Essentially anything that provides content, in addition to existing services such 
+as file services, distributed directory services such as domain name services, and 
+distributed e-mail services.
+	本质上任何提供内容的东西，此外存在一些服务如文件服务，分布式目录服务(域名服务器
+，分布式邮箱服务器，如POP3/IMAP服务器等)
+
+
+1.19 Identify several advantages and several disadvantages of open-source operating 
+systems. Include the types of people who would find each aspect to be an advantage or 
+a disadvantage. 
+确定开源操作系统的优缺点
+Answer: 
+	Open source operating systems have the advantages of having many people working 
+on them, many people debugging them, ease of access and distribution, and rapid update 
+cycles. Further, for students and programmers, there is certainly an advantage to being 
+able to view and modify the source code. Typically open source operating systems are 
+free for some forms of use, usually just requiring payment for support services. 
+Commercial operating system companies usually do not like the competition that open source 
+operating systems bring because these features are difficult to compete against. Some 
+open source operating systems do not offer paid support programs. Some companies avoid 
+open source projects because they need paid support, so that they have some entity to 
+hold accountable if there is a problem or they need help fixing an issue. Finally, 
+some complain that a lack of discipline in the coding of open source operating systems 
+means that backward compatibility is lacking making upgrades difficult, and that the 
+release cycle exacerbates these issues by forcing users to upgrade frequently. 
+开源操作系统的优点是开发者共同开发、调试、易于访问和分发、并快速更新迭代。此外，对于
+学生和程序员来说，可以查看和修改源代码。典型的开源操作系统是免费提供一些形式的使用，
+通常只需要为服务付费。商业操作系统公司通常不喜欢开源的竞争操作系统带来了这些特性，
+因为这些特性很难与之竞争。一些开源操作系统不提供付费的支持程序。一些公司避免开源项目
+因为他们需要付费的支持，所以他们有了一些实体来如果有问题或他们需要帮助解决问题，要
+否则。最后,一些人抱怨开源操作系统的编码缺乏纪律这意味着向后兼容性不足，难以进行升
+级发布周期迫使用户频繁升级，从而加剧了这些问题
+
+

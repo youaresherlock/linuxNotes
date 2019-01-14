@@ -1,0 +1,244 @@
+CHAPTER 2
+
+Chapter 2 is concerned with the operating-system interfaces that users (or at least 
+programmers) actually see:system calls. The treatment is somewhat vague since more 
+detail requires picking a specific system to discuss.This chapter is best 
+supplemented with exactly this detail for the specific system the students have at 
+hand.Ideally they should study the system calls and write some programs making system 
+calls. This chapter also ties together several important concepts including layered 
+design, virtual machines, Java and the Java virtual machine, system design and 
+implementation, system generation, and the policy/mechanism difference.
+第2章是关于用户(或者至少是程序员)实际看到的操作系统接口: 系统调用 需要选择一个确切
+的系统来分析否则有些含糊。这一章很好的补充了具体系统的一些细节，而这些操作系统是学生
+手头上有的。理想情况下，他们将学习系统调用并编写一些系统调用程序。本章还将几个重要的
+概念联系在一起，包括分层设计、Java与Java虚拟机、系统设计与实现、系统生成、系统策略
+/机制的差异
+
+Exercises
+2.1 The services and functions provided by an operating system can be divided 
+into two main categories.Briefly describe the two categories, and discuss how 
+they differ.
+操作系统提供的服务和功能可以划分为两大类。简要描述这两类，并讨论如何他们的不同
+Answer:
+	One class of services provided by an operating system is to enforce 
+protection between different processes running concurrently in the system. Processes 
+are allowed to access only those memory locations that are associated with their 
+address spaces. Also, processes are not allowed to corrupt files associated with other
+users. A process is also not allowed to access devices directly without operating 
+system intervention. The second class of services provided by an operating system is 
+to provide new functionality that is not supported directly by the underlying hardware. 
+Virtual memory and file systems are two such examples of new service sprovided by an 
+operating system.
+	操作系统提供的一类服务是在系统中不同并发运行的进程之间强制保护。进程只允许访问
+与它们关联的内存位置。。此外，进程不允许损坏与其他进程相关联的文件。进程也不允许在没
+有操作系统介入的情况下直接访问设备。操作系统提供的第二类服务是提供低层硬件不能直接
+支持的功能。虚拟内存和文件系统就是操作系统提供的两类服务的例子。
+
+
+2.2 Describe three general methods for passing parameters to the operating system.
+描述传递参数到操作系统的三种通用方法.
+Answer: 
+	a. Pass parameters in registers 
+	a. 寄存器传递参数
+	b. Registers pass starting addresses of blocks of parameters 
+	b. 寄存器传递参数的起始地址
+	c. Parameters can be placed, or pushed, onto the stack by the program, 
+and popped off the stack by the operating system 
+	c. 参数通过操作系统可以被程序放置，或者压入栈，弹出栈
+
+
+2.3 Describe how you could obtain a statistical profile of the amount of time spent 
+by a program executing different sections of its code. Discuss the importance of 
+obtaining such a statistical profile. 
+描述如何获得一个程序执行不同代码部分的花费时间统计表。讨论获得这种统计表的重要性
+Answer: 
+	One could issue periodic timer interrupts and monitor what instructions or 
+what sections of code are currently executing when the interrupts are delivered. A 
+statistical profile of which pieces of code were active should be consistent with 
+the time spent by the program in different sections of its code. Once such a 
+statistical profile has been obtained, the programmer could optimize those sections 
+of code that are consuming more of the CPU resources. 
+	可以发出周期性的定时器中断，并且当中断到达时监控代码正在执行的片段或指令。一个
+活跃代码片段统计表与程序在不同代码片段的耗时一致。一旦获得了统计表，程序员可以优化
+消耗CPU资源较多的代码片段
+
+
+2.4 What are the five major activities of an operating system in regard to file 
+management?
+操作系统文件管理的5个主要功能是什么?
+Answer:
+• The creation and deletion of files
+创建和删除文件
+• The creation and deletion of directories
+目录的创建和删除
+• The support of primitives for manipulating files and directories
+支持操作文件和目录的原语
+• The mapping of files onto secondary storage
+文件到辅助存储的映射
+• The backup of files on stable (nonvolatile) storage media
+在稳定(非易失性)存储介质上备份文件
+
+
+2.5 What are the advantages and disadvantages of using the same system-call 
+interface for manipulating both files and devices?
+使用相同系统调用操作文件和设备的优点和缺点是什么
+Answer:
+	Each device can be accessed as though it was a file in the file system. Since 
+most of the kernel deals with devices through this file interface, it is relatively
+easy to add a new device driver by implementing the hardware-specific code to support 
+this abstract file interface. Therefore, this benefits the development of both user 
+program code, which can be written to access devices and files in the same manner, 
+and device driver code, which can be written to support a well-defined API. The
+disadvantage with using the same interface is that it might be difficult to capture 
+the functionality of certain devices within the context of the file access API, 
+thereby resulting in either a loss of functionality or a loss of performance. Some 
+of this could be overcome by the use of the ioctl operation that provides a 
+general-purpose interface for processes to invoke operations on devices
+可以像访问文件系统中的文件一样访问每个设备。因为大多数内核都是通过文件接口来处理
+设备的，所以相对容易通过实现具体硬件的代码来支持抽象的文件接口来增加一个新的设备
+驱动器。因此，这个有利于双方用户代码的发展， 它可以以同样的方式来访问设备和文件，
+并且设备驱动代码可以支持一个定义明确的API。使用相同的接口的弊端在于它可能很难捕捉
+在文件访问API上下文中某些设备的功能，从而导致功能损失或性能损失。
+
+2.6 Would it be possible for the user to develop a new command interpreter using 
+the system-call interface provided by the operating system?
+采用操作系统提供的系统调用接口，用户是否能够开发一个新的命令解释程序?
+Answer:
+	An user should be able to develop a new command interpreter using the system-call 
+interface provided by the operating system. The command interpreter allows an user to 
+create and manage processes and also determine ways by which they communicate (such 
+as through pipes and files). As all of this functionality could be accessed by an 
+user-level program using the system calls, it should be possible for the user to 
+develop a new command-line interpreter
+用户应该能够使用系统提供的系统调用开发新的命令解释器。命令解释器允许用户这样创建和
+管理进程并且确定它们的通信方式(通过管道和文件)。由于所有这些功能都可以被用户级的程
+序进行系统调用，因此用户可以开发出一个新的命令行解释器。
+
+
+2.7 What are the two models of interprocess communication? What are the strengths 
+and weaknesses of the two approaches?
+进程间通信的两种模式是什么? 优点缺点各是什么?
+Answer:
+The two models of interprocess communication are message-passing model and the 
+shared-memory model. Message passing is useful for exchanging smaller amounts of 
+data, because no conflicts need be avoided. It is also easier to implement than 
+is shared memory for intercomputer communication. Shared memory allows maximum 
+speed and convenience of communication, since it can be done at memory transfer 
+speeds when it takes place within a computer. However, this method compromises on 
+protection and synchronization between the processes sharing memory
+进程间通信的两种模型是消息传递模型和共享内存模型。消息传递对于交换小数量的消息非常
+有用，因为不需要避免冲突。它的实现要比共享内存简单。当它在一台计算机中发生的时候，
+共享内存允许最大速度并且方便通信，因为它可以在内存传输。然而，这种方法在共享内存的
+进程之间的保护和同步方面做出了妥协
+
+
+2.8 Why is the separation of mechanism and policy desirable?
+为什么机制和策略分离是可取的?
+Answer:
+Mechanism and policy must be separate to ensure that systems are easy to modify. No 
+two system installations are the same, so each installation may want to tune the 
+operating system to suit its needs. With mechanism and policy separate, the policy 
+may be changed at will while the mechanism stays unchanged. This arrangement provides 
+a more flexible system.
+机制和策略必须分离，以确保系统方便更改。没有两个系统安装是相同的，因此每个安装要让
+操作系统配合它的需要。机制和策略分离下，策略在机制不变的情况下，可以随意更改，这样的
+安排提供一个更灵活的系统。
+
+
+2.9 It is sometimes difficult to achieve a layered approach if two components of 
+the operating system are dependent on each other. Identify a scenario in which it is
+unclear how to layer two system components that require tight coupling of their 
+functionalities.
+如果操作系统的两个组件相互依赖，那么采用分层法有时很难。找一个这样的场景: 有两个
+系统组件的功能是紧密耦合的，但如何对它们分层却并不清楚。
+Answer:
+	The virtual memory subsystem and the storage subsystem are typically tightly 
+coupled and requires careful design in a layered system due to the following 
+interactions. Many systems allow files to be mapped into the virtual memory space of 
+an executing process. On the other hand, the virtual memory subsystem typically uses 
+the storage system to provide the backing store for pages that do not currently 
+reside in memory. Also, updates to the file system are sometimes buffered in physical 
+memory before it is flushed to disk, thereby requiring careful coordination of the 
+usage of memory between the virtual memory subsystem and the file system.
+	虚拟内存子系统和存储子系统通常是紧密连接的，由于下面的交互，需要在分层系统中仔细
+设计。许多系统允许将文件映射成执行的进程的虚拟内存空间。另一方面，虚拟内存子系统通常
+使用存储系统为当前不再内存中的页提供存储。此外，对文件系统的更新有时在刷新到磁盘中前
+会在物理内存缓冲，因此，需要仔细协调虚拟内存子系统和文件系统之间内存的使用。
+
+
+2.10 What is the main advantage of the microkernel approach to system design? How do 
+user programs and system services interact in a microkernel architecture? What are 
+the disadvantages of using the microkernel approach?
+微内核方法在系统设计上的主要优点是什么?用户程序和系统服务如何在微内核架构中交互?微
+内核方法的缺点是什么?
+Answer:
+	Benefits typically include the following: 
+	优点通常包括以下几点:
+(a) adding a new service does not require modifying the kernel, 
+(a) 添加新服务不需要修改内核
+(b) it is more secure as more operations are done in user mode than in kernel mode, and 
+(b) 由于在用户模式下进行的操作比在内核模式下进行的操作多，因此更安全
+(c) a simpler kernel design and functionality typically results in a more reliable 
+operating system. User programs and system services interact in a microkernel 
+architecture by using interprocess communication mechanisms such as messaging. These 
+messages are conveyed by the operating system. The primary disadvantages of the 
+microkernel architecture are the overheads associated with interprocess communication 
+and the frequent use of the operating system’s messaging functions in order to enable 
+the user process and the system service to interact with each other.
+更简单的内核设计和功能通常会带来更可靠的结果系统。用户程序和系统服务在微内核架构中
+通常使用进程间通信机制例如消息传递来交互。这些消息由操作系统传递。微内核架构的主要
+缺点是与进程间通信相关的开销有关，并且频繁的使用操作系统消息传递功能来使用户进程和
+系统服务可以彼此交互。
+
+
+2.12 How are iOS and Android similar? How are they different?
+iOS和Android有何相似之处?它们有什么不同?
+Answer:
+Similarities
+• Both are based on existing kernels (Linux and Mac OS X).
+• Both have architecture that uses software stacks.
+• Both provide frameworks for developers.
+相似之处
+两者都基于现有内核(Linux和Mac OS X)
+两者都有使用软件栈的架构
+两者都为开发人员提供了框架
+Differences
+• iOS is closed-source, and Android is open-source.
+• iOS applications are developed in Objective-C, Android in Java.
+• Android uses a virtual machine, and iOS executes code natively.
+差异
+IOS是封闭源码的，Android是开源的
+IOS应用程序是用用Objective-C开发的, Android是用Java开发的。
+Android使用虚拟机，IOS本地执行代码
+
+
+2.13 Explain why Java programs running on Android systems do not use the standard 
+Java API and virtual machine.
+解释为何在安卓系统中运行的Java程序不使用Java API和虚拟机。
+Answer:
+	It is because the standard API and virtual machine are designed for desktop and 
+server systems, not mobile devices. Google developed a separate API and virtual 
+machine for mobile devices.
+	因为标准API和虚拟机是为桌面和服务器系统设计的，而不是为移动系统设计的设备。谷歌
+移动设备开发了单独的API和虚拟机。
+
+
+2.14 The experimental Synthesis operating system has an assembler incorporated in 
+the kernel. To optimize system-call performance, the kernel assembles routines within 
+kernel space to minimize the path that the system call must take through the kernel. 
+This approach is the antithesis of the layered approach, in which the path through the 
+kernel is extended to make building the operating system easier. Discuss the pros and 
+cons of the Synthesis approach to kernel design and optimization of system performance.
+实验操作系统Synthesis在内核里集成了一个汇编器。为了优化系统调用性能，通过在内核空
+间内汇编程序，可缩短系统调用在内核中经过的路径。这与分层法相反，这种方法包括了在内核
+中经过的路径，以使操作系统构建更加简单。讨论Synthesis方法对内核设计和性能优化有什么
+好处与坏处。
+
+Answer:
+	Synthesis is impressive due to the performance it achieves through on-the-fly 
+compilation. Unfortunately, it is difficult to debug problems within the kernel due 
+to the fluidity of the code. Also, such compilation is system specific, making 
+Synthesis difficult to port (a new compiler must be written for each architecture).
+	Synthesis因为动态编译而令人印象深刻，不幸的是，在内核中调试问题是很困难的，由于
+代码的流动性。而且，这样的编译是系统特有的，使Synthesis难以移植(必须为每个架构编写
+新的编译器)
